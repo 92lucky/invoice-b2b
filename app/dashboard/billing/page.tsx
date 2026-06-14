@@ -228,7 +228,7 @@ export default async function BillingPage() {
               </thead>
 
               <tbody>
-                {user?.payments?.map((p) => (
+                {user?.payments?.map((p: any) => (
                   <tr key={p.id}>
                     <td style={tdStyle}>{p.orderId}</td>
                     <td style={tdStyle}>Rp {p.amount.toLocaleString()}</td>
