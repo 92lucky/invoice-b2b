@@ -23,35 +23,18 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   },
 
   callbacks: {
-    async signIn({ user }) {
-      if (!user?.email) return false;
-
-      // 🔍 FIND USER
-      const dbUser = await prisma.user.findUnique({
-        where: { email: user.email },
-      });
-
-      if (!dbUser) return true;
-
-      // 🔁 UPSERT SUBSCRIPTION
-      await prisma.subscription.upsert({
-        where: { userId: dbUser.id },
-        create: {
-          userId: dbUser.id,
-          plan: "free",
-          status: "TRIAL",
-          trialEnd: new Date(Date.now() + 5 * 60 * 1000),
-        },
-        update: {},
-      });
-
-      return true;
-    },
-
     async jwt({ token, user }) {
-      if (user) {
-        token.id = user.id;
-        token.email = user.email;
+      if (user?.email) {
+        const dbUser = await prisma.user.findUnique({
+          where: { email: user.email },
+          include: { profile: true },
+        });
+
+        token.id = dbUser?.id;
+        token.email = dbUser?.email;
+
+        // 🔥 SOURCE OF TRUTH
+        token.profileCompleted = !!dbUser?.profile;
       }
 
       return token;
@@ -61,6 +44,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       if (session.user) {
         session.user.id = token.id as string;
         session.user.email = token.email as string;
+        session.user.profileCompleted = token.profileCompleted as boolean;
       }
 
       return session;

@@ -24,9 +24,9 @@ export default function SoftGate({
   // =========================
   // SAFE PROFILE CHECK
   // =========================
-  const profileCompleted = !!session?.user?.profileCompleted;
+  const profileCompleted = session?.user?.profileCompleted;
 
-  const profileIncomplete = status !== "loading" && !profileCompleted;
+  const profileIncomplete = status === "authenticated" && !profileCompleted;
 
   // =========================
   // SUBSCRIPTION CHECK

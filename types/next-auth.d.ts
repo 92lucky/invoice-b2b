@@ -1,4 +1,4 @@
-import NextAuth from "next-auth";
+import "next-auth";
 
 declare module "next-auth" {
   interface Session {
@@ -8,7 +8,6 @@ declare module "next-auth" {
       email?: string | null;
       image?: string | null;
 
-      // tambahkan profileCompleted
       profileCompleted: boolean;
     };
   }
@@ -18,9 +17,6 @@ declare module "next-auth/jwt" {
   interface JWT {
     id?: string;
     email?: string | null;
-    profileCompleted?: boolean;
-
-    // opsional, simpan juga profileCompleted di token
     profileCompleted?: boolean;
   }
 }
