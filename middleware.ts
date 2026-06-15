@@ -8,19 +8,22 @@ export async function middleware(req: NextRequest) {
     secret: process.env.NEXTAUTH_SECRET,
   });
 
-  const protectedRoutes = ["/dashboard", "/billing", "/profile"];
+  const { pathname } = req.nextUrl;
 
-  const isProtected = protectedRoutes.some((route) =>
-    req.nextUrl.pathname.startsWith(route)
-  );
+  const isProtected =
+    pathname.startsWith("/dashboard") ||
+    pathname.startsWith("/billing") ||
+    pathname.startsWith("/profile");
 
+  // kalau belum login → hanya redirect kalau benar-benar protected
   if (isProtected && !token) {
     return NextResponse.redirect(new URL("/login", req.url));
   }
 
+  // kalau sudah login tapi masih di login page → ke dashboard
+  if (pathname === "/login" && token) {
+    return NextResponse.redirect(new URL("/dashboard", req.url));
+  }
+
   return NextResponse.next();
 }
-
-export const config = {
-  matcher: ["/((?!login|api|_next|.*\\..*).*)"],
-};
