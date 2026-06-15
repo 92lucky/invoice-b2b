@@ -19,12 +19,18 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
   callbacks: {
     async signIn({ user }) {
-      if (!user?.id) return true;
+      if (!user?.email) return false;
+
+      const dbUser = await prisma.user.findUnique({
+        where: { email: user.email },
+      });
+
+      if (!dbUser) return true;
 
       await prisma.subscription.upsert({
-        where: { userId: user.id },
+        where: { userId: dbUser.id },
         create: {
-          userId: user.id,
+          userId: dbUser.id,
           plan: "free",
           status: "TRIAL",
           trialEnd: new Date(Date.now() + 5 * 60 * 1000),
@@ -36,12 +42,18 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     },
 
     async jwt({ token, user }) {
-      if (user) {
-        token.id = user.id;
-        token.email = user.email;
+      // hanya jalan saat login pertama
+      if (user?.email) {
+        const dbUser = await prisma.user.findUnique({
+          where: { email: user.email },
+        });
+
+        if (dbUser) {
+          token.id = dbUser.id;
+          token.email = dbUser.email;
+        }
       }
 
-      // 🔥 FIX UTAMA DI SINI
       if (token.id) {
         const profile = await prisma.appProfile.findUnique({
           where: { userId: token.id as string },
