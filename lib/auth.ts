@@ -19,7 +19,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
   callbacks: {
     async signIn({ user }) {
-      return !!user?.email; // hanya validasi
+      if (!user?.email) return false;
+      return true;
     },
 
     async jwt({ token, user }) {
