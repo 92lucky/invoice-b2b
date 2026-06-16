@@ -1,7 +1,12 @@
+"use client";
+
+import { useState } from "react";
 import { FileText } from "lucide-react";
 import LoginButton from "@/components/ui/LoginButton";
 
 export default function Page() {
+  const [agreed, setAgreed] = useState(false);
+
   return (
     <main className="min-h-screen bg-black flex items-center justify-center px-6">
       <div className="w-full max-w-md">
@@ -22,13 +27,29 @@ export default function Page() {
 
           <div className="h-px bg-zinc-800 my-10" />
 
-          <div className="flex justify-center">
-            <LoginButton />
+          <div className="flex justify-center mb-6">
+            <LoginButton disabled={!agreed} />
           </div>
 
-          <p className="text-zinc-500 text-sm text-center mt-10">
-            login dengan akun Google
-          </p>
+          <label className="flex items-start gap-3 text-xs text-zinc-400">
+            <input
+              type="checkbox"
+              checked={agreed}
+              onChange={(e) => setAgreed(e.target.checked)}
+              className="mt-0.5"
+            />
+
+            <span>
+              Saya menyetujui{" "}
+              <a
+                href="/legal"
+                className="text-zinc-300 hover:text-white underline"
+              >
+                Syarat Penggunaan & Privasi
+              </a>
+              .
+            </span>
+          </label>
         </div>
       </div>
     </main>

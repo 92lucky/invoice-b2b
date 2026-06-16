@@ -1,20 +1,20 @@
 export const plans = [
   {
-    label: "/Bulan",
+    label: "1 Bulan",
     price: "Rp8k",
-    desc: "per month",
+    desc: "Pengenalan",
     plan: "monthly",
   },
   {
     label: "3 Bulan",
     price: "Rp20k",
-    desc: "save more",
+    desc: "Explore",
     plan: "quarterly",
   },
   {
     label: "12 Bulan",
     price: "Rp70k",
-    desc: "full access",
+    desc: "Lebih Hemat",
     plan: "yearly",
   },
 ];

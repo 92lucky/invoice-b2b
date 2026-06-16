@@ -3,9 +3,14 @@
 import { signIn } from "next-auth/react";
 import { FcGoogle } from "react-icons/fc";
 
-export default function LoginButton() {
+interface LoginButtonProps {
+  disabled?: boolean;
+}
+
+export default function LoginButton({ disabled = false }: LoginButtonProps) {
   return (
     <button
+      disabled={disabled}
       onClick={() => signIn("google", { callbackUrl: "/dashboard" })}
       className="
         w-16 h-16
@@ -15,6 +20,9 @@ export default function LoginButton() {
         transition
         flex items-center justify-center
         shadow-xl
+        disabled:opacity-50
+        disabled:hover:scale-100
+        disabled:cursor-not-allowed
       "
     >
       <FcGoogle size={32} />
