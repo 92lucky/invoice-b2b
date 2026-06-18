@@ -8,7 +8,7 @@ export async function middleware(req: NextRequest) {
   const token = await getToken({
     req,
     secret: process.env.NEXTAUTH_SECRET,
-    secureCookie: true,
+    secureCookie: process.env.NODE_ENV === "production",
   });
 
   const isProtected =
@@ -16,14 +16,18 @@ export async function middleware(req: NextRequest) {
     pathname.startsWith("/billing") ||
     pathname.startsWith("/profile");
 
-  // 🔥 CASE 1: halaman protected tapi belum login
+  // 🔥 CASE 1: belum login → protect route
   if (isProtected && !token) {
-    return NextResponse.redirect(new URL("/login", req.url));
+    const url = req.nextUrl.clone();
+    url.pathname = "/login";
+    return NextResponse.redirect(url);
   }
 
-  // 🔥 CASE 2: sudah login tapi ke login page
+  // 🔥 CASE 2: sudah login → jangan ke login page lagi
   if (pathname === "/login" && token) {
-    return NextResponse.redirect(new URL("/dashboard", req.url));
+    const url = req.nextUrl.clone();
+    url.pathname = "/dashboard";
+    return NextResponse.redirect(url);
   }
 
   return NextResponse.next();
