@@ -1,3 +1,5 @@
+import type { Subscription } from "@prisma/client";
+
 export function getSubscriptionState(sub: Subscription | null) {
   if (!sub) {
     return { active: false, label: "FREE" };
@@ -5,15 +7,15 @@ export function getSubscriptionState(sub: Subscription | null) {
 
   const now = new Date();
 
-  // 1. FIRST: check ACTIVE status
-  if (sub.status === "active") {
-    if (!sub.currentPeriodEnd || now <= sub.currentPeriodEnd) {
-      return { active: true, label: "PREMIUM" };
-    }
+  // EXPIRED GLOBAL CHECK
+  if (sub.currentPeriodEnd && now > sub.currentPeriodEnd) {
     return { active: false, label: "EXPIRED" };
   }
 
-  // 2. TRIAL
+  if (sub.status === "active") {
+    return { active: true, label: "PREMIUM" };
+  }
+
   if (sub.status === "trial") {
     if (sub.trialEnd && now <= sub.trialEnd) {
       return { active: true, label: "TRIAL" };
