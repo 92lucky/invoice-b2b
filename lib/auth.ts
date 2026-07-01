@@ -2,6 +2,7 @@ import NextAuth from "next-auth";
 import Google from "next-auth/providers/google";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { prisma } from "@/lib/prisma";
+import { getTrialEndDate } from "@/lib/payment/subscription/duration";
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: PrismaAdapter(prisma),
@@ -19,37 +20,51 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   ],
 
   session: {
-    strategy: "jwt",
+    strategy: "database",
   },
 
   callbacks: {
-    async jwt({ token, user }) {
-      if (user?.email) {
-        const dbUser = await prisma.user.findUnique({
-          where: { email: user.email },
-          include: { profile: true },
-        });
+    async session({ session, user }) {
+      if (!session.user) return session;
 
-        token.id = dbUser?.id;
-        token.email = dbUser?.email;
+      session.user.id = user.id;
 
-        // 🔥 SOURCE OF TRUTH
-        token.profileCompleted = !!dbUser?.profile;
-      }
+      const profile = await prisma.appProfile.findUnique({
+        where: {
+          userId: user.id,
+        },
+        select: {
+          id: true,
+        },
+      });
 
-      return token;
-    },
-
-    async session({ session, token }) {
-      if (session.user) {
-        session.user.id = token.id as string;
-        session.user.email = token.email as string;
-        session.user.profileCompleted = token.profileCompleted as boolean;
-      }
+      session.user.profileCompleted = !!profile;
 
       return session;
     },
   },
 
-  secret: process.env.NEXTAUTH_SECRET!,
+  events: {
+    async createUser({ user }) {
+      if (!user.id) {
+        throw new Error("User ID is missing");
+      }
+
+      await prisma.subscription.create({
+        data: {
+          plan: "free",
+          status: "trial",
+          trialEnd: getTrialEndDate(),
+
+          user: {
+            connect: {
+              id: user.id,
+            },
+          },
+        },
+      });
+    },
+  },
+
+  secret: process.env.NEXTAUTH_SECRET,
 });

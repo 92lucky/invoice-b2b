@@ -1,45 +1,25 @@
-import type { Subscription } from "@prisma/client";
-
-export function isSubscriptionActive(sub: Subscription | null) {
-  if (!sub) return false;
-
-  if (sub.status !== "active") return false;
-
-  if (sub.currentPeriodEnd && new Date() > sub.currentPeriodEnd) {
-    return false;
+export function getSubscriptionState(sub: Subscription | null) {
+  if (!sub) {
+    return { active: false, label: "FREE" };
   }
-
-  return true;
-}
-
-export function getPlanLabel(sub?: Subscription | null) {
-  if (!sub) return "FREE";
 
   const now = new Date();
 
-  const trialEnd = sub.trialEnd ? new Date(sub.trialEnd) : null;
-
-  const periodEnd = sub.currentPeriodEnd
-    ? new Date(sub.currentPeriodEnd)
-    : null;
-
-  // PREMIUM ACTIVE
-  const isPremiumPlan =
-    sub.plan === "monthly" || sub.plan === "quarterly" || sub.plan === "yearly";
-
-  if (isPremiumPlan && periodEnd && now <= periodEnd) {
-    return "PREMIUM";
+  // 1. FIRST: check ACTIVE status
+  if (sub.status === "active") {
+    if (!sub.currentPeriodEnd || now <= sub.currentPeriodEnd) {
+      return { active: true, label: "PREMIUM" };
+    }
+    return { active: false, label: "EXPIRED" };
   }
 
-  // TRIAL ACTIVE
-  if (trialEnd && now <= trialEnd) {
-    return "TRIAL";
+  // 2. TRIAL
+  if (sub.status === "trial") {
+    if (sub.trialEnd && now <= sub.trialEnd) {
+      return { active: true, label: "TRIAL" };
+    }
+    return { active: false, label: "EXPIRED" };
   }
 
-  // EXPIRED
-  if ((trialEnd && now > trialEnd) || (periodEnd && now > periodEnd)) {
-    return "EXPIRED";
-  }
-
-  return "FREE";
+  return { active: false, label: "FREE" };
 }

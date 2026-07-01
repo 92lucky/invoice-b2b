@@ -30,15 +30,15 @@ export default function LandingPage() {
             </div>
 
             <h1 className="max-w-2xl text-5xl font-black leading-tight tracking-tight md:text-6xl">
-              Sistem Internal
+              Aplikasi Internal
               <span className="bg-linear-to-r from-green-400 via-blue-400 to-purple-400 bg-clip-text text-transparent">
                 {" "}
-                Agen LPG 3KG
+                Agen LPG 3 Kg
               </span>
             </h1>
 
             <p className="mt-6 max-w-xl text-lg leading-relaxed text-zinc-300">
-              Platform internal modern untuk membantu operasional agen LPG 3KG
+              Platform internal modern untuk membantu operasional agen LPG 3 Kg
               menjadi lebih cepat, rapi, dan terintegrasi dalam satu dashboard.
             </p>
 
@@ -48,14 +48,14 @@ export default function LandingPage() {
                 href="/login"
                 className="rounded-xl bg-linear-to-r from-green-500 to-blue-500 px-7 py-4 text-sm font-semibold text-white shadow-lg shadow-green-500/30 transition hover:scale-[1.03] hover:shadow-green-500/50"
               >
-                Sign In
+                Masuk
               </Link>
 
               <a
                 href="#learn-more"
                 className="rounded-xl border border-white/15 bg-white/5 px-7 py-4 text-sm font-medium text-zinc-200 backdrop-blur-md transition hover:bg-white/10"
               >
-                Learn More
+                Selengkapnya ...
               </a>
             </div>
 
@@ -63,9 +63,7 @@ export default function LandingPage() {
             <div className="mt-14 flex flex-wrap gap-6">
               <div className="rounded-2xl border border-white/10 bg-white/5 px-6 py-5 backdrop-blur-md">
                 <p className="text-3xl font-bold text-green-400">2</p>
-                <p className="mt-1 text-sm text-zinc-400">
-                  Core Operational Features
-                </p>
+                <p className="mt-1 text-sm text-zinc-400">Fitur Utama</p>
               </div>
 
               <div className="rounded-2xl border border-white/10 bg-white/5 px-6 py-5 backdrop-blur-md">
@@ -95,7 +93,7 @@ export default function LandingPage() {
                   </p>
 
                   <h3 className="mt-2 text-2xl font-bold text-white">
-                    Rekap LO & Invoice Management
+                    Rekap LO & Invoice Generator
                   </h3>
 
                   <p className="mt-3 text-sm leading-relaxed text-zinc-300">
@@ -121,7 +119,7 @@ export default function LandingPage() {
             </p>
 
             <h2 className="text-4xl font-black leading-tight">
-              Dibangun untuk kebutuhan operasional agen LPG 3KG
+              Dibangun untuk kebutuhan operasional vendor agen LPG 3KG
             </h2>
 
             <p className="mt-6 text-lg leading-relaxed text-zinc-300">

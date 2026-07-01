@@ -2,90 +2,76 @@
 
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
-import Link  from "next/link";
+import Link from "next/link";
+
+type SubscriptionState = {
+  active: boolean;
+  label: "FREE" | "TRIAL" | "PREMIUM" | "EXPIRED";
+};
 
 export default function Dashboard() {
   const { data: session, status } = useSession();
 
   const [sub, setSub] = useState<any>(null);
+  const [state, setState] = useState<SubscriptionState | null>(null);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (status !== "authenticated") return;
-    if (!session?.user?.email) return;
 
     const fetchSubscription = async () => {
       try {
         setLoading(true);
 
-        const res = await fetch(
-          `/api/payment/subscription?email=${session.user.email}`,
-          { cache: "no-store" }
-        );
+        const res = await fetch("/api/payment/subscription", {
+          cache: "no-store",
+        });
 
-        if (!res.ok) {
-          setSub({ expired: true });
-          return;
-        }
+        if (!res.ok) return;
 
         const data = await res.json();
-        setSub(data.subscription ?? null);
+
+        setSub(data.subscription);
+        setState(data.state);
       } catch (err) {
         console.error(err);
-        setSub({ expired: true });
       } finally {
         setLoading(false);
       }
     };
 
     fetchSubscription();
+
     const interval = setInterval(fetchSubscription, 5000);
 
     return () => clearInterval(interval);
-  }, [status, session?.user?.email]);
+  }, [status]);
 
-  const now = Date.now();
+  const expireDate = sub?.trialEnd ?? sub?.currentPeriodEnd ?? null;
 
-  const trialEnd = sub?.trialEnd ? new Date(sub.trialEnd).getTime() : null;
-  const paidEnd = sub?.currentPeriodEnd
-    ? new Date(sub.currentPeriodEnd).getTime()
-    : null;
+  const formatDate = (date: string | Date | null) =>
+    date ? new Date(date).toLocaleString("id-ID") : "-";
 
-  const isTrialActive = trialEnd ? now < trialEnd : false;
-  const isPaidActive = paidEnd ? now < paidEnd : false;
+  const planLabel =
+    state?.label === "TRIAL"
+      ? "TRIAL PLAN"
+      : state?.label === "PREMIUM"
+      ? "PREMIUM PLAN"
+      : state?.label === "EXPIRED"
+      ? "EXPIRED PLAN"
+      : "FREE PLAN";
 
-  const isActive = isTrialActive || isPaidActive;
-
-  const isExpired = sub?.expired || (!isActive && sub);
-
-  const expireDate = trialEnd || paidEnd;
-
-  const formatDate = (ts: number | null) =>
-    ts ? new Date(ts).toLocaleString("id-ID") : "-";
-
-  const planLabel = !sub
-    ? "FREE PLAN"
-    : isExpired
-    ? "EXPIRED PLAN"
-    : isTrialActive
-    ? "TRIAL PLAN"
-    : isPaidActive
-    ? "PREMIUM PLAN"
-    : "EXPIRED PLAN";
-
-  const statusLabel = !sub
-    ? "No Subscription"
-    : isExpired
-    ? "Expired Subscription"
-    : isTrialActive
-    ? "Trial Active"
-    : isPaidActive
-    ? "Premium Active"
-    : "Expired Subscription";
+  const statusLabel =
+    state?.label === "TRIAL"
+      ? "Trial Active"
+      : state?.label === "PREMIUM"
+      ? "Premium Active"
+      : state?.label === "EXPIRED"
+      ? "Expired Subscription"
+      : "No Subscription";
 
   return (
     <div className="min-h-screen bg-zinc-950 text-white p-8 space-y-6">
-      {/* HEADER */}
       <div>
         <h1 className="text-3xl font-bold">Dashboard</h1>
         <p className="text-zinc-400 text-sm">
@@ -93,7 +79,6 @@ export default function Dashboard() {
         </p>
       </div>
 
-      {/* MAIN CARD */}
       <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 max-w-2xl">
         <div className="space-y-4 text-sm">
           <div className="flex justify-between">
@@ -108,7 +93,7 @@ export default function Dashboard() {
 
           <div className="flex justify-between">
             <span>Status</span>
-            <span className={isActive ? "text-green-400" : "text-red-400"}>
+            <span className={state?.active ? "text-green-400" : "text-red-400"}>
               {statusLabel}
             </span>
           </div>
@@ -124,12 +109,12 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {/* UPGRADE CARD */}
       <div className="max-w-2xl bg-linear-to-r from-zinc-900 to-zinc-950 border border-zinc-800 rounded-2xl p-6 flex items-center justify-between">
         <div>
           <h2 className="text-lg font-semibold">
             Upgrade & Unlock Full Power 🚀
           </h2>
+
           <p className="text-sm text-zinc-400 mt-1">
             Jangan biarkan workflow kamu terhenti. Aktifkan fitur premium
             sekarang.
@@ -137,7 +122,7 @@ export default function Dashboard() {
         </div>
 
         <Link
-          href="dashboard/billing"
+          href="/dashboard/billing"
           className="px-5 py-2 rounded-xl bg-white text-black font-medium hover:opacity-80 transition"
         >
           Upgrade

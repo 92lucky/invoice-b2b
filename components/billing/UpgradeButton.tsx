@@ -28,7 +28,7 @@ export default function UpgradeButton({ plan }: { plan: string }) {
       const data = await res.json();
 
       if (data?.redirect_url) {
-        window.location.href = data.redirect_url;
+        window.open(data.redirect_url, "_blank");
       } else {
         setError("Redirect URL tidak ditemukan");
       }

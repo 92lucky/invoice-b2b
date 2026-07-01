@@ -1,4 +1,4 @@
-import { snap } from "@/lib/payment/midtrans";
+import { createTransaction } from "@/lib/payment/pakasir";
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
 
@@ -39,40 +39,14 @@ export async function POST(req: Request) {
         userId: user.id,
         orderId,
         amount: price,
-        status: "PENDING",
+        status: "pending",
         plan,
       },
     });
 
-    // SUBSCRIPTION (CREATE / UPDATE = TRIAL 5 MENIT)
-    await prisma.subscription.upsert({
-      where: { userId: user.id },
-      create: {
-        userId: user.id,
-        plan,
-        status: "TRIAL",
-        trialEnd: new Date(Date.now() + 5 * 60 * 1000),
-      },
-      update: {
-        plan,
-        status: "TRIAL",
-        trialEnd: new Date(Date.now() + 5 * 60 * 1000),
-      },
-    });
-
-    const transaction = await snap.createTransaction({
-      transaction_details: {
-        order_id: orderId,
-        gross_amount: price,
-      },
-      item_details: [
-        {
-          id: plan,
-          price,
-          quantity: 1,
-          name: `${plan.toUpperCase()} Subscription`,
-        },
-      ],
+    const transaction = await createTransaction({
+      orderId,
+      amount: price,
     });
 
     return Response.json({
@@ -80,7 +54,7 @@ export async function POST(req: Request) {
       orderId,
       plan,
       price,
-      status: "PENDING",
+      status: "pending",
     });
   } catch (err) {
     console.error(err);

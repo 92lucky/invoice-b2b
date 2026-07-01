@@ -1,65 +1,53 @@
 generator client {
   provider = "prisma-client-js"
-  
 }
 
 datasource db {
   provider = "postgresql"
-  
-  
 }
 
 model User {
-  id             String    @id @default(cuid())
-  email          String    @unique
-  name           String?
-  emailVerified  DateTime?
-  image          String?
+  id            String        @id @default(cuid())
+  email         String        @unique
+  name          String?
+  emailVerified DateTime?
+  image         String?
 
-  accounts Account[]
-  sessions Session[]
+  accounts      Account[]
+  sessions      Session[]
 
-   subscription   Subscription?
-  payments       Payment[]
-
-  profile  AppProfile?
+  profile       AppProfile?
+  payments      Payment[]
+  subscription  Subscription?
 }
 
 model AppProfile {
-  id               String   @id @default(cuid())
-
-  userId           String   @unique
-  user             User     @relation(fields: [userId], references: [id])
-
-  namaPT           String
-  namaBank         String
-  noRekening       String
-  penanggungJawab  String
-  alamat           String
-  kabupaten        String
-
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
+  id              String   @id @default(cuid())
+  userId          String   @unique
+  namaPT          String
+  namaBank        String
+  noRekening      String
+  penanggungJawab String
+  alamat          String
+  kabupaten       String
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
-
-
 
 model Invoice {
-  id             Int      @id @default(autoincrement())
-  invoiceNumber  String   @unique
-  invoiceDate    DateTime
-  periode        String
-
-  quantityKG     Float
-  displayQty     Float
-  pokok          Float
-  dpp            Float
-  ppn            Float
-  total          Float
-
-  createdAt      DateTime @default(now())
+  id            Int      @id @default(autoincrement())
+  invoiceNumber String   @unique
+  invoiceDate   DateTime
+  periode       String
+  quantityKG    Float
+  displayQty    Float
+  pokok         Float
+  dpp           Float
+  ppn           Float
+  total         Float
+  createdAt     DateTime @default(now())
 }
-
 
 model Account {
   id                String  @id @default(cuid())
@@ -67,17 +55,19 @@ model Account {
   type              String
   provider          String
   providerAccountId String
-  refresh_token     String? @db.Text
-  access_token      String? @db.Text
+
+  refresh_token     String?
+  access_token      String?
   expires_at        Int?
   token_type        String?
   scope             String?
-  id_token          String? @db.Text
+  id_token          String?
   session_state     String?
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
+  @@index([userId])
 }
 
 model Session {
@@ -87,6 +77,8 @@ model Session {
   expires      DateTime
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
 }
 
 model VerificationToken {
@@ -96,29 +88,31 @@ model VerificationToken {
 
   @@unique([identifier, token])
 }
-model Subscription {
-  id                   String @id @default(cuid())
-  userId               String @unique
-  user                 User @relation(fields: [userId], references: [id], onDelete: Cascade)
-plan  String
-  status               String
-   trialEnd  DateTime? 
-  currentPeriodStart   DateTime?
-  currentPeriodEnd     DateTime?
 
-  createdAt            DateTime @default(now())
-  updatedAt            DateTime @updatedAt
+model Subscription {
+  id                 String   @id @default(cuid())
+  userId             String   @unique
+  plan               String
+  status             String
+
+  trialEnd           DateTime?
+  currentPeriodStart DateTime?
+  currentPeriodEnd   DateTime?
+
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Payment {
-  id        String   @id @default(cuid())
+  id        String    @id @default(cuid())
   userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  orderId   String   @unique
+  orderId   String    @unique
   amount    Float
   status    String
-  plan      String  
+  plan      String
   paidAt    DateTime?
-  createdAt DateTime @default(now())
+  createdAt DateTime  @default(now())
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
