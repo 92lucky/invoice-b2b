@@ -111,9 +111,7 @@ export default function Dashboard() {
 
       <div className="max-w-2xl bg-linear-to-r from-zinc-900 to-zinc-950 border border-zinc-800 rounded-2xl p-6 flex items-center justify-between">
         <div>
-          <h2 className="text-lg font-semibold">
-            Upgrade & Unlock Full Power 🚀
-          </h2>
+          <h2 className="text-lg font-semibold">Upgrade Plan</h2>
 
           <p className="text-sm text-zinc-400 mt-1">
             Jangan biarkan workflow kamu terhenti. Aktifkan fitur premium

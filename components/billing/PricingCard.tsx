@@ -10,46 +10,45 @@ type Plan = {
 };
 
 export default function PricingCard({ item }: { item: Plan }) {
+  const price = item.price.replace(/[^\d]/g, "");
+
   return (
     <div
       className="
-        rounded-2xl p-6
-        bg-emerald-500/10
-        border border-emerald-500/20
-        backdrop-blur-xl
-        transition-all duration-200
-        cursor-pointer
-        hover:bg-[#18181b]
-        hover:border-white/10
-      "
+    flex h-full min-h-[340px] flex-col
+    rounded-3xl
+    border border-emerald-500/20
+    bg-linear-to-b from-emerald-500/10 via-zinc-900/80 to-zinc-900
+    p-6 lg:p-7
+    backdrop-blur-xl
+    transition-all duration-300
+    hover:-translate-y-1
+    hover:border-emerald-400/40
+    hover:shadow-xl hover:shadow-emerald-500/10
+  "
     >
       {/* LABEL */}
-      <p className="text-emerald-200 text-sm font-semibold mb-2 tracking-wide">
-        {item.label}
-      </p>
-
-      {/* PRICE */}
-      <h3 className="text-white text-3xl font-extrabold mb-1 tracking-tight">
-        {item.price}
-      </h3>
-
-      {/* DESC */}
-      <p className="text-zinc-400 text-sm mb-5">{item.desc}</p>
-
-      {/* FEATURES */}
-      <div className="flex flex-col gap-2 mb-6">
-        {["Invoice Export", "Payment Tracking", "Premium Features"].map((f) => (
-          <div
-            key={f}
-            className="flex items-center gap-2 text-sm text-zinc-300"
-          >
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-            {f}
-          </div>
-        ))}
+      <div className="flex justify-center">
+        <span className="rounded-full bg-emerald-500/15 px-5 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-emerald-300">
+          {item.label}
+        </span>
       </div>
 
-      <UpgradeButton plan={item.plan} />
+      {/* PRICE */}
+      <div className="flex flex-1 flex-col items-center justify-center text-center">
+        <div className="text-4xl font-black tracking-tight text-white sm:text-5xl">
+          {price + "k"}
+
+          <p className="mt-3 text-sm font-normal leading-6 text-zinc-400">
+            {item.desc}
+          </p>
+        </div>
+      </div>
+
+      {/* BUTTON */}
+      <div className="pt-6">
+        <UpgradeButton plan={item.plan} />
+      </div>
     </div>
   );
 }

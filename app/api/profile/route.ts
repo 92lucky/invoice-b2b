@@ -12,6 +12,12 @@ export async function POST(req: NextRequest) {
 
     const body = await req.json();
 
+    if (body.noRekening && !/^\d+$/.test(body.noRekening)) {
+      return Response.json(
+        { error: "Nomor rekening hanya boleh berisi angka." },
+        { status: 400 }
+      );
+    }
     const profile = await prisma.appProfile.upsert({
       where: { userId: session.user.id },
       update: {

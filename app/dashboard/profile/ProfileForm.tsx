@@ -141,6 +141,7 @@ export default function ProfileForm({
                         <Icon size={18} />
                       </div>
                       <input
+                        required
                         name={f.name}
                         value={(form as any)[f.name] ?? ""}
                         onChange={handleChange}

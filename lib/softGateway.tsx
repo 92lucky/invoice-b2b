@@ -4,6 +4,7 @@ import { ReactNode } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { CheckCircle2, FileWarning } from "lucide-react";
+import Link from "next/link";
 
 interface SoftGateProps {
   children: ReactNode;
@@ -126,6 +127,16 @@ export default function SoftGate({
               >
                 {profileIncomplete ? "Lengkapi Profil" : "Upgrade Plan"}
               </button>
+
+              <div className="mt-3">
+                <Link
+                  href="/dashboard"
+                  className="block w-full text-center border border-zinc-700 hover:border-zinc-500 text-zinc-300 hover:text-white py-2 rounded-xl transition"
+                >
+                  {" "}
+                  Kembali
+                </Link>
+              </div>
             </div>
           </div>
         </>
