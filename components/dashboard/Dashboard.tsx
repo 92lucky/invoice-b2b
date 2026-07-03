@@ -41,10 +41,6 @@ export default function Dashboard() {
     };
 
     fetchSubscription();
-
-    const interval = setInterval(fetchSubscription, 5000);
-
-    return () => clearInterval(interval);
   }, [status]);
 
   const expireDate = sub?.trialEnd ?? sub?.currentPeriodEnd ?? null;

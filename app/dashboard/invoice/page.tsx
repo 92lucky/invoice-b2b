@@ -2,6 +2,7 @@ import Invoice from "./Invoice";
 import SoftGate from "@/lib/softGateway";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { getSubscriptionState } from "@/lib/payment/subscription/status";
 
 export default async function InvoicePage() {
   const session = await auth();
@@ -12,18 +13,11 @@ export default async function InvoicePage() {
       })
     : null;
 
-  const now = new Date();
-
-  const isExpired =
-    !sub ||
-    sub.status !== "active" ||
-    (sub.currentPeriodEnd && new Date(sub.currentPeriodEnd) < now);
+  const { active } = getSubscriptionState(sub);
 
   return (
-    <div>
-      <SoftGate mode="feature" featureName="Invoice" active={!isExpired}>
-        <Invoice />
-      </SoftGate>
-    </div>
+    <SoftGate mode="feature" featureName="Invoice" active={active}>
+      <Invoice />
+    </SoftGate>
   );
 }

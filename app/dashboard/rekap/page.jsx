@@ -2,6 +2,7 @@ import SoftGate from "@/lib/softGateway";
 import ReportPage from "./Rekap";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { getSubscriptionState } from "@/lib/payment/subscription/status";
 
 export default async function RekapPage() {
   const session = await auth();
@@ -12,16 +13,11 @@ export default async function RekapPage() {
       })
     : null;
 
-  const now = new Date();
-
-  const isExpired =
-    !sub ||
-    sub.status !== "active" ||
-    (sub.currentPeriodEnd && new Date(sub.currentPeriodEnd) < now);
+  const { active } = getSubscriptionState(sub);
 
   return (
     <div>
-      <SoftGate mode="feature" featureName="Rekap LO" active={!isExpired}>
+      <SoftGate mode="feature" featureName="Rekap LO" active={active}>
         <ReportPage />
       </SoftGate>
     </div>
