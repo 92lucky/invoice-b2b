@@ -3,6 +3,7 @@ import { auth } from "@/lib/auth";
 
 import { NextRequest } from "next/server";
 import { generateInvoicePdf } from "@/lib/invoice/pdf.js";
+import { getSubscriptionState } from "@/lib/payment/subscription/status";
 
 export async function POST(req: NextRequest) {
   try {
@@ -22,15 +23,9 @@ export async function POST(req: NextRequest) {
       where: { userId: session.user.id },
     });
 
-    const now = new Date();
+    const { active } = getSubscriptionState(subscription);
 
-    const isExpired =
-      !subscription ||
-      subscription.status !== "active" ||
-      (subscription.currentPeriodEnd &&
-        new Date(subscription.currentPeriodEnd) < now);
-
-    if (isExpired) {
+    if (!active) {
       return new Response("Subscription expired", { status: 403 });
     }
 

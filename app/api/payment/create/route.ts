@@ -67,9 +67,9 @@ import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
 
 const PRICING: Record<string, number> = {
-  monthly: 8000,
-  quarterly: 20000,
-  yearly: 76000,
+  monthly: 13000,
+  quarterly: 26000,
+  yearly: 78000,
 };
 
 export async function POST(req: Request) {
