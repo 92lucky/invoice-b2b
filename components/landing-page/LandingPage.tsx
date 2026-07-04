@@ -48,7 +48,7 @@ export default function LandingPage() {
                 href="/login"
                 className="rounded-xl bg-linear-to-r from-green-500 to-blue-500 px-7 py-4 text-sm font-semibold text-white shadow-lg shadow-green-500/30 transition hover:scale-[1.03] hover:shadow-green-500/50"
               >
-                Masuk
+                Mulai
               </Link>
 
               <a
