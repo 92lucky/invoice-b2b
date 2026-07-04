@@ -106,6 +106,7 @@ export default function Invoice() {
                   placeholder="05-404224..."
                   className="w-full bg-zinc-100 text-black placeholder:text-zinc-500 border border-zinc-300 rounded-2xl px-4 py-1 outline-none focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition"
                   onChange={(e) => setInvoiceNo(e.target.value)}
+                  required
                 />
               </div>
 
@@ -119,6 +120,7 @@ export default function Invoice() {
                   placeholder="Mei 2026"
                   className="w-full bg-zinc-100 text-black placeholder:text-zinc-500 border border-zinc-300 rounded-2xl px-4 py-1 outline-none focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition"
                   onChange={(e) => setPeriode(e.target.value)}
+                  required
                 />
               </div>
 
@@ -132,6 +134,7 @@ export default function Invoice() {
                   type="date"
                   className="w-full bg-zinc-100 text-black border border-zinc-300 rounded-2xl px-4 py-1 outline-none focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition"
                   onChange={(e) => setDate(e.target.value)}
+                  required
                 />
               </div>
 
@@ -145,6 +148,7 @@ export default function Invoice() {
                   placeholder="1000"
                   className="w-full bg-zinc-100 text-black placeholder:text-zinc-500 border border-zinc-300 rounded-2xl px-4 py-1 outline-none focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition"
                   onChange={(e) => setQuantity(e.target.value)}
+                  required
                 />
               </div>
             </div>

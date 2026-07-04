@@ -43,7 +43,8 @@ export default function Dashboard() {
     fetchSubscription();
   }, [status]);
 
-  const expireDate = sub?.trialEnd ?? sub?.currentPeriodEnd ?? null;
+  const expireDate =
+    sub?.status === "trial" ? sub?.trialEnd : sub?.currentPeriodEnd;
 
   const formatDate = (date: string | Date | null) =>
     date ? new Date(date).toLocaleString("id-ID") : "-";
