@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function Invoice() {
   const [quantity, setQuantity] = useState("");
@@ -14,11 +14,11 @@ export default function Invoice() {
   // =====================
   // CORE GENERATOR
   // =====================
-  const generatePDF = async (mode: "preview" | "download") => {
+  const generatePDF = async (endpoint: "preview" | "download") => {
     setLoading(true);
 
     try {
-      const res = await fetch(`/api/invoice?mode=${mode}`, {
+      const res = await fetch(`/api/invoice/${endpoint}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -31,12 +31,9 @@ export default function Invoice() {
         }),
       });
 
-      if (!res.ok) return;
+      if (!res.ok) return null;
 
-      const blob = await res.blob();
-      const url = window.URL.createObjectURL(blob);
-
-      return url;
+      return await res.blob();
     } finally {
       setLoading(false);
     }
@@ -46,29 +43,40 @@ export default function Invoice() {
   // PREVIEW
   // =====================
   const handlePreview = async () => {
-    const url = await generatePDF("preview");
+    const blob = await generatePDF("preview");
 
-    if (url) {
-      setPdfUrl(url);
+    if (!blob) return;
+
+    if (pdfUrl) {
+      URL.revokeObjectURL(pdfUrl);
     }
+
+    const url = URL.createObjectURL(blob);
+
+    setPdfUrl(url);
   };
-
-  // =====================
-  // DOWNLOAD
-  // =====================
   const handleDownload = async () => {
-    const url = await generatePDF("download");
+    const blob = await generatePDF("download");
 
-    if (!url) return;
+    if (!blob) return;
+
+    const url = URL.createObjectURL(blob);
 
     const a = document.createElement("a");
-
     a.href = url;
     a.download = "invoice.pdf";
     a.click();
 
     URL.revokeObjectURL(url);
   };
+
+  useEffect(() => {
+    return () => {
+      if (pdfUrl) {
+        URL.revokeObjectURL(pdfUrl);
+      }
+    };
+  }, [pdfUrl]);
 
   return (
     <div className="min-h-screen bg-linear-to-br from-zinc-950 via-zinc-900 to-black px-4 py-5">
