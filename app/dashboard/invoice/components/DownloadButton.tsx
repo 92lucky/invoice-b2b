@@ -1,9 +1,9 @@
 "use client";
 
-import { useInvoicePdf } from "../hooks/useInvoicePdf";
+import { useInvoiceDownload } from "../hooks/useInvoiceDownload";
 
 export default function DownloadButton() {
-  const { loading, handleDownload } = useInvoicePdf();
+  const { loading, handleDownload } = useInvoiceDownload();
 
   return (
     <button

@@ -1,11 +1,11 @@
 "use client";
 
-import { useInvoicePdf } from "../hooks/useInvoicePdf";
+import { useInvoicePreview } from "../hooks/useInvoicePreview";
 import EmptyPreview from "./EmptyPreview";
 import LoadingPreview from "./LoadingPreview";
 
 export default function InvoicePreview() {
-  const { loading, pdfUrl } = useInvoicePdf();
+  const { loading, pdfUrl } = useInvoicePreview();
 
   return (
     <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-4 shadow-2xl">
