@@ -1,10 +1,10 @@
-import Invoice from "./InvoicePage";
 import SoftGate from "@/lib/softGateway";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { getSubscriptionState } from "@/lib/payment/subscription/status";
+import InvoicePage from "./InvoicePage";
 
-export default async function InvoicePage() {
+export default async function Page() {
   const session = await auth();
 
   const sub = session?.user?.id
