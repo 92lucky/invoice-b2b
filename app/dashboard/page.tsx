@@ -1,10 +1,10 @@
-import Dashboard from "@/components/dashboard/Dashboard";
-import PlanBadge from "@/components/billing/PlanBadge";
 import SoftGate from "@/lib/softGateway";
 
 import { getSubscriptionState } from "@/lib/payment/subscription/status";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import PlanBadge from "./billing/components/PlanBadge";
+import Dashboard from "./components/DashboardHome";
 
 export default async function HomePage() {
   const session = await auth();

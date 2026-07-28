@@ -1,4 +1,4 @@
-import Invoice from "./Invoice";
+import Invoice from "./InvoicePage";
 import SoftGate from "@/lib/softGateway";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
@@ -17,7 +17,7 @@ export default async function InvoicePage() {
 
   return (
     <SoftGate mode="feature" featureName="Invoice" active={active}>
-      <Invoice />
+      <InvoicePage />
     </SoftGate>
   );
 }

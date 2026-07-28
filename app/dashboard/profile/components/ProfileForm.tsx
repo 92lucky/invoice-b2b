@@ -15,7 +15,7 @@ import {
   CheckCircle2,
   TriangleAlert,
 } from "lucide-react";
-import { resetAccount } from "@/app/actions/reset-account";
+import { resetAccount } from "@/app/actions/account/reset-account";
 
 type FormData = {
   namaPT?: string;

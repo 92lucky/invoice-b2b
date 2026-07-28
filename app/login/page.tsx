@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 
-import LoginButton from "@/components/ui/LoginButton";
 import Image from "next/image";
+import LoginButton from "./components/LoginButton";
 
 export default function Page() {
   const [agreed, setAgreed] = useState(false);

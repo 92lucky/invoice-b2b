@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import PaymentSuccessPage from "./payment-succes-client";
+import PaymentSuccessPage from "./PaymentSuccesClient";
 
 export default function Page() {
   return (

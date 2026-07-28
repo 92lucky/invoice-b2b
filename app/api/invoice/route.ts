@@ -1,33 +1,28 @@
+import { NextRequest } from "next/server";
+
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
 
-import { NextRequest } from "next/server";
-import { generateInvoicePdf } from "@/lib/invoice/pdf.js";
+import { generateInvoicePdf } from "@/lib/invoice/pdf";
 import { getSubscriptionState } from "@/lib/payment/subscription/status";
+
+export const runtime = "nodejs";
 
 export async function POST(req: NextRequest) {
   try {
     const session = await auth();
 
-    if (!session?.user) {
-      return new Response("Unauthorized", { status: 401 });
+    if (!session?.user?.id) {
+      return new Response("Unauthorized", {
+        status: 401,
+      });
     }
 
-    const profile = await prisma.appProfile.findFirst({
+    const profile = await prisma.appProfile.findUnique({
       where: {
         userId: session.user.id,
       },
     });
-
-    const subscription = await prisma.subscription.findUnique({
-      where: { userId: session.user.id },
-    });
-
-    const { active } = getSubscriptionState(subscription);
-
-    if (!active) {
-      return new Response("Subscription expired", { status: 403 });
-    }
 
     if (!profile) {
       return new Response("Profile belum di setup", {
@@ -35,22 +30,44 @@ export async function POST(req: NextRequest) {
       });
     }
 
+    const subscription = await prisma.subscription.findUnique({
+      where: {
+        userId: session.user.id,
+      },
+    });
+
+    const { active } = getSubscriptionState(subscription);
+
+    if (!active) {
+      return new Response("Subscription expired", {
+        status: 403,
+      });
+    }
+
     const body = await req.json();
+
+    const mode = body.mode === "download" ? "download" : "preview";
 
     const pdfBytes = await generateInvoicePdf({
       profile,
-      ...body,
+      quantity: body.quantity,
+      date: body.date,
+      invoiceNo: body.invoiceNo,
+      periode: body.periode,
     });
 
     return new Response(Buffer.from(pdfBytes), {
       headers: {
         "Content-Type": "application/pdf",
-        "Content-Disposition": "attachment; filename=invoice.pdf",
+        "Content-Disposition":
+          mode === "download" ? 'attachment; filename="invoice.pdf"' : "inline",
       },
     });
   } catch (err) {
     console.error(err);
 
-    return new Response("ERROR", { status: 500 });
+    return new Response("Internal Server Error", {
+      status: 500,
+    });
   }
 }
