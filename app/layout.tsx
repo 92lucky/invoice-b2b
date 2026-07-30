@@ -3,22 +3,23 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Providers from "./providers";
 
-export const metadata = {
-  metadataBase: new URL("https://domainmu.com"),
+export const metadata: Metadata = {
+  metadataBase: new URL("https://corvusion-invoice.vercel.app"),
 
   title: {
-    default: "Corvusion",
-    template: "%s | Corvusion",
+    default: "InvoiceB2B",
+    template: "%s | InvoiceB2B",
   },
 
-  description: "Internal management platform for LPG agents.",
+  description:
+    "Create professional invoices, manage reports, and streamline your business workflow with InvoiceB2B.",
 
   keywords: [
     "invoice",
     "invoice generator",
-    "internal management",
-    "lpg",
-    "dashboard",
+    "invoice pdf",
+    "report",
+    "business",
     "nextjs",
   ],
 
@@ -31,24 +32,40 @@ export const metadata = {
   creator: "Yusran",
 
   openGraph: {
-    title: "Corvusion",
-    description: "Internal management platform for LPG agents.",
+    title: "InvoiceB2B",
+    description: "Create professional invoices and manage reports online.",
+
+    url: "https://corvusion-invoice.vercel.app/",
+
+    siteName: "InvoiceB2B",
+
+    locale: "en_US",
 
     type: "website",
-
-    locale: "id_ID",
 
     images: [
       {
         url: "/og-image.png",
         width: 1200,
         height: 630,
+        alt: "InvoiceB2B",
       },
     ],
   },
 
   twitter: {
     card: "summary_large_image",
+
+    title: "InvoiceB2B",
+
+    description: "Create professional invoices and manage reports online.",
+
+    images: ["/og-image.png"],
+  },
+
+  robots: {
+    index: true,
+    follow: true,
   },
 };
 
@@ -61,10 +78,6 @@ const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
 });
-
-export const metadata: Metadata = {
-  title: "InvoiceB2B",
-};
 
 export default function RootLayout({
   children,
