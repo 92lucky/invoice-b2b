@@ -1,13 +1,25 @@
-"use client";
-
+import Image from "next/image";
 import Link from "next/link";
+
+<script
+  type="application/ld+json"
+  dangerouslySetInnerHTML={{
+    __html: JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      name: "Corvusion",
+      applicationCategory: "BusinessApplication",
+      operatingSystem: "Web",
+    }),
+  }}
+/>;
 
 export default function LandingPage() {
   return (
     <main className="relative min-h-screen overflow-hidden bg-black text-white">
       {/* Background */}
       <div className="absolute inset-0">
-        <img
+        <Image
           src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=2070&auto=format&fit=crop"
           alt="Background"
           className="h-full w-full object-cover opacity-20"
@@ -78,7 +90,7 @@ export default function LandingPage() {
           {/* Right */}
           <div className="relative flex items-center justify-center">
             <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 shadow-2xl backdrop-blur-xl">
-              <img
+              <Image
                 src="https://images.unsplash.com/photo-1556740749-887f6717d7e4?q=80&w=2070&auto=format&fit=crop"
                 alt="Dashboard Preview"
                 className="h-162.5 w-full object-cover"
