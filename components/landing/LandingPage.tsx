@@ -23,6 +23,8 @@ export default function LandingPage() {
           src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=2070&auto=format&fit=crop"
           alt="Background"
           className="h-full w-full object-cover opacity-20"
+          width={2070}
+          height={1380}
         />
 
         <div className="absolute inset-0 bg-linear-to-br from-black via-zinc-950/95 to-green-950/70" />
@@ -94,6 +96,8 @@ export default function LandingPage() {
                 src="https://images.unsplash.com/photo-1556740749-887f6717d7e4?q=80&w=2070&auto=format&fit=crop"
                 alt="Dashboard Preview"
                 className="h-162.5 w-full object-cover"
+                width={2070}
+                height={1380}
               />
 
               <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/20 to-transparent" />
